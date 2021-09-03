@@ -2,4 +2,5 @@
     <string name="app_name">LiveRover</string>
     <string name="api_key">DEMO_KEY</string>
     <string name="base_url">https://api.nasa.gov/mars-photos/api/v1/rovers/</string>
+    <string name="pick_date">Select a Date</string>
 </resources>
