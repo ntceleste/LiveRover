@@ -4,12 +4,12 @@ import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.liverover.controller.RoverService
+import com.example.liverover.model.Photo
 import com.example.liverover.model.RoverPhotoResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,42 +21,17 @@ import java.util.Calendar.*
 import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity() {
-    private val roverPhotoIdList = ArrayList<String>()
+    private val roverPhotoIdList = ArrayList<Photo>()
     private lateinit var roverPhotoRecyclerViewAdapter: RoverPhotoRecyclerViewAdapter
-    private var date_picker: Button? = null
-    var cal = getInstance()
+    private var datePicker: Button? = null
+    var cal: Calendar = getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        date_picker = findViewById(R.id.rover_date_picker)
-        val dateSetListener = object : DatePickerDialog.OnDateSetListener {
-            override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
-                                   dayOfMonth: Int) {
-                cal.set(YEAR, year)
-                cal.set(MONTH, monthOfYear)
-                cal.set(DAY_OF_MONTH, dayOfMonth)
-                setRoverDate()
-            }
-        }
-
-        date_picker!!.setOnClickListener {
-            DatePickerDialog(
-                this@MainActivity,
-                dateSetListener,
-                cal.get(YEAR),
-                cal.get(MONTH),
-                cal.get(DAY_OF_MONTH)
-            ).show()
-        }
-
-        val recyclerView: RecyclerView = findViewById(R.id.rvRoverPhotos)
-        roverPhotoRecyclerViewAdapter = RoverPhotoRecyclerViewAdapter(roverPhotoIdList)
-        val layoutManager = LinearLayoutManager(applicationContext)
-        recyclerView.layoutManager = layoutManager
-        recyclerView.adapter = roverPhotoRecyclerViewAdapter
+        setupDatePicker()
+        setupRecyclerView()
     }
 
     private fun getRoverPhotos(earthDate: String){
@@ -74,7 +49,7 @@ class MainActivity : AppCompatActivity() {
 
                     roverPhotoIdList.clear()
                     response.body()?.photos?.forEach {
-                        roverPhotoIdList.add(it.id.toString())
+                        roverPhotoIdList.add(it)
                     }
                     roverPhotoRecyclerViewAdapter.notifyDataSetChanged()
                 }
@@ -94,5 +69,36 @@ class MainActivity : AppCompatActivity() {
 
         Log.d("date picked", earthDate)
         getRoverPhotos(earthDate)
+    }
+
+    private fun setupDatePicker(){
+        datePicker = findViewById(R.id.rover_date_picker)
+        val dateSetListener = object : DatePickerDialog.OnDateSetListener {
+            override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
+                                   dayOfMonth: Int) {
+                cal.set(YEAR, year)
+                cal.set(MONTH, monthOfYear)
+                cal.set(DAY_OF_MONTH, dayOfMonth)
+                setRoverDate()
+            }
+        }
+
+        datePicker!!.setOnClickListener {
+            DatePickerDialog(
+                this@MainActivity,
+                dateSetListener,
+                cal.get(YEAR),
+                cal.get(MONTH),
+                cal.get(DAY_OF_MONTH)
+            ).show()
+        }
+    }
+
+    private fun setupRecyclerView(){
+        val recyclerView: RecyclerView = findViewById(R.id.rvRoverPhotos)
+        roverPhotoRecyclerViewAdapter = RoverPhotoRecyclerViewAdapter(roverPhotoIdList)
+        val layoutManager = LinearLayoutManager(applicationContext)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = roverPhotoRecyclerViewAdapter
     }
 }
