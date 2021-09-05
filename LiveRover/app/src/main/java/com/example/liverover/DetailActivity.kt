@@ -26,19 +26,44 @@ class DetailActivity : AppCompatActivity()  {
         }
 
         if (photoData != null) {
-            setPhotoDetailText(photoData)
+            setPhotoDetailText(
+                photoData.earth_date,
+                photoData.sol.toString(),
+                photoData.rover.name,
+                photoData.rover.status,
+                photoData.rover.launch_date,
+                photoData.rover.landing_date,
+                photoData.camera.full_name
+            )
+        } else {
+            setPhotoDetailText(
+                "sorry",
+                "I",
+                "must've",
+                "loaded",
+                "this",
+                "in",
+                "wrong :(")
         }
 
         Log.d("Detail Activity", "launched")
     }
 
-    private fun setPhotoDetailText(photo: Photo){
-        findViewById<TextView>(R.id.photoEarthDateText).text = photo.earth_date
-        findViewById<TextView>(R.id.photoSolDateText).text = photo.sol.toString()
-        findViewById<TextView>(R.id.roverNameText).text = photo.rover.name
-        findViewById<TextView>(R.id.roverStatusText).text = photo.rover.status
-        findViewById<TextView>(R.id.roverLaunchText).text = photo.rover.launch_date
-        findViewById<TextView>(R.id.roverLandText).text = photo.rover.landing_date
-        findViewById<TextView>(R.id.photoCameraNameText).text = photo.camera.full_name
+    private fun setPhotoDetailText(
+        earthDate: String,
+        solDate: String,
+        roverName: String,
+        roverStatus: String,
+        roverLaunch: String,
+        roverLand: String,
+        roverCamera: String
+    ){
+        findViewById<TextView>(R.id.photoEarthDateText).text = earthDate
+        findViewById<TextView>(R.id.photoSolDateText).text = solDate
+        findViewById<TextView>(R.id.roverNameText).text = roverName
+        findViewById<TextView>(R.id.roverStatusText).text = roverStatus
+        findViewById<TextView>(R.id.roverLaunchText).text = roverLaunch
+        findViewById<TextView>(R.id.roverLandText).text = roverLand
+        findViewById<TextView>(R.id.photoCameraNameText).text = roverCamera
     }
 }
