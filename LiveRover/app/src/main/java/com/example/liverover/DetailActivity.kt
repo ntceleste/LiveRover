@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.liverover.model.Photo
+import java.io.File
 
 class DetailActivity : AppCompatActivity()  {
 
@@ -16,11 +17,12 @@ class DetailActivity : AppCompatActivity()  {
 
         val media = photoData?.img_src
 
-        if (media !== null) {
+        if (!media.isNullOrEmpty()) {
             Glide.with(this)
                 .load(media)
                 .into(findViewById(R.id.imageview))
         } else {
+            Log.d("DetailActivity", "loading in saffron image")
         }
 
         if (photoData != null) {
@@ -28,14 +30,6 @@ class DetailActivity : AppCompatActivity()  {
         }
 
         Log.d("Detail Activity", "launched")
-    }
-
-    private fun setRoverPhoto(){
-
-    }
-
-    private fun setDefaultPhoto(){
-
     }
 
     private fun setPhotoDetailText(photo: Photo){

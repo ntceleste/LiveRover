@@ -7,13 +7,13 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
-import android.widget.DatePicker
 import android.widget.Spinner
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.liverover.controller.RoverService
+import com.example.liverover.model.Camera
 import com.example.liverover.model.Photo
+import com.example.liverover.model.Rover
 import com.example.liverover.model.RoverPhotoResponse
 import retrofit2.Call
 import retrofit2.Callback
@@ -52,18 +52,19 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : Callback<RoverPhotoResponse> {
             override fun onResponse(call: Call<RoverPhotoResponse>, response: Response<RoverPhotoResponse>) {
                 if (response.code() == 200) {
-                    Log.d("response recived" , response.body().toString())
-
-                    roverPhotoIdList.clear()
-                    response.body()?.photos?.forEach {
-                        roverPhotoIdList.add(it)
+                    if(!response.body()?.photos.isNullOrEmpty()){
+                        response.body()?.photos?.let { updateRoverList(it) }
+                    } else {
+                        updateRoverList(arrayListOf(getDefaultPhotoObject()))
                     }
-                    roverPhotoRecyclerViewAdapter.notifyDataSetChanged()
+                } else{
+                    updateRoverList(arrayListOf(getDefaultPhotoObject()))
                 }
             }
 
             override fun onFailure(call: Call<RoverPhotoResponse>, t: Throwable) {
-                Log.e("response failure", t.localizedMessage.toString())
+                Log.e("MainActivity", t.localizedMessage.toString())
+                updateRoverList(arrayListOf(getDefaultPhotoObject()))
             }
         })
     }
@@ -100,18 +101,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupRoverSpinner(){
-        var roverSpinner = findViewById<Spinner>(R.id.roverNameSpinner)
+        val roverSpinner = findViewById<Spinner>(R.id.roverNameSpinner)
         roverSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                if (parent != null) {
-                    roverName = parent.getItemAtPosition(pos).toString()
-                    Log.d("MainActivity", "From Spinner: $roverName is set $earthDate is set")
-                    getRoverPhotos()
-                }
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                roverName = parent.getItemAtPosition(pos).toString()
+                Log.d("MainActivity", "From Spinner: $roverName is set $earthDate is set")
+                getRoverPhotos()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                roverName = parent.getItemAtPosition(0).toString()
             }
 
         }
@@ -124,5 +123,19 @@ class MainActivity : AppCompatActivity() {
         val layoutManager = LinearLayoutManager(applicationContext)
         recyclerView.layoutManager = layoutManager
         recyclerView.adapter = roverPhotoRecyclerViewAdapter
+    }
+
+    private fun updateRoverList(photos: ArrayList<Photo>) {
+        roverPhotoIdList.clear()
+        photos.forEach {
+            roverPhotoIdList.add(it)
+        }
+        roverPhotoRecyclerViewAdapter.notifyDataSetChanged()
+    }
+
+    private fun getDefaultPhotoObject() : Photo{
+        val camera = Camera(0, "SaffronCam", 0, "Saffron Nap Time Camera")
+        val rover = Rover(0, "Saffron", "2021-1-6", "2018-10-8", "napping")
+        return Photo(123, 0, camera, "", "2021-8-25", rover)
     }
 }
