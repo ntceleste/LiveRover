@@ -10,4 +10,8 @@
     <string name="rover_land_label">Landing Date:</string>
     <string name="rover_status_label">Rover Status:</string>
     <string name="camera_name_label">Camera:</string>
+    <string-array name="rover_name_array">
+        <item>Curiosity</item>
+        <item>Perseverance</item>
+    </string-array>
 </resources>

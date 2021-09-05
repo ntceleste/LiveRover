@@ -7,6 +7,16 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <Spinner
+        android:id="@+id/roverNameSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:entries="@array/rover_name_array"
+        app:layout_constraintBottom_toTopOf="@id/rvRoverPhotos"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <Button
         android:id="@+id/rover_date_picker"
         android:layout_width="wrap_content"
@@ -16,7 +26,7 @@
         android:spinnersShown="true"
         android:text="@string/pick_date"
         app:layout_constraintBottom_toTopOf="@+id/rvRoverPhotos"
-        app:layout_constraintStart_toStartOf="@+id/rvRoverPhotos"
+        app:layout_constraintStart_toEndOf="@id/roverNameSpinner"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -28,5 +38,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rover_date_picker" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
