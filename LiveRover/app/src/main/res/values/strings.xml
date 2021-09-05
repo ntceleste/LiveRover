@@ -3,4 +3,11 @@
     <string name="api_key">DEMO_KEY</string>
     <string name="base_url">https://api.nasa.gov/mars-photos/api/v1/rovers/</string>
     <string name="pick_date">Select a Date</string>
+    <string name="earth_date_label">Earth Date:</string>
+    <string name="sol_date_label">Sol Date:</string>
+    <string name="rover_name_label">Rover Name:</string>
+    <string name="rover_launch_label">Launch Date:</string>
+    <string name="rover_land_label">Landing Date:</string>
+    <string name="rover_status_label">Rover Status:</string>
+    <string name="camera_name_label">Camera:</string>
 </resources>

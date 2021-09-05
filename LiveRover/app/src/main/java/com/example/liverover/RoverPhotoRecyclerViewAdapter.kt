@@ -38,7 +38,8 @@ internal class RoverPhotoRecyclerViewAdapter(private var itemsList: List<Photo>)
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = itemsList[position]
-        holder.itemTextView.text = item.id.toString()
+        val displayText = item.id.toString() + " - " + item.camera.full_name
+        holder.itemTextView.text = displayText
     }
 
     override fun getItemCount(): Int {
