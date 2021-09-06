@@ -24,6 +24,9 @@ import java.util.*
 import java.util.Calendar.*
 import kotlin.collections.ArrayList
 
+/**
+ * Activity handler for main view
+ */
 class MainActivity : AppCompatActivity() {
     private val roverPhotoIdList = ArrayList<Photo>()
     private lateinit var roverPhotoRecyclerViewAdapter: RoverPhotoRecyclerViewAdapter
@@ -32,6 +35,9 @@ class MainActivity : AppCompatActivity() {
     private var earthDate: String = ""
     var cal: Calendar = getInstance()
 
+    /**
+     * set view elements on main view
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -41,6 +47,9 @@ class MainActivity : AppCompatActivity() {
         setupRecyclerView()
     }
 
+    /**
+     * makes a request to NASA API, sets recycler view to the photo list from the response
+     */
     private fun getRoverPhotos(){
         val retrofit = Retrofit.Builder()
             .baseUrl(this.getString(R.string.base_url))
@@ -50,11 +59,13 @@ class MainActivity : AppCompatActivity() {
         val call = service.getCuriosityPhotoFromEarthDate(roverName, earthDate, this.getString(R.string.api_key))
 
         call.enqueue(object : Callback<RoverPhotoResponse> {
+            //if request succeeds, send photo list to recyclerview
             override fun onResponse(call: Call<RoverPhotoResponse>, response: Response<RoverPhotoResponse>) {
                 if (response.code() == 200) {
                     if(!response.body()?.photos.isNullOrEmpty()){
                         response.body()?.photos?.let { updateRoverList(it) }
                     } else {
+                        //if no photos found for a date, set to default photo
                         updateRoverList(arrayListOf(getDefaultPhotoObject()))
                     }
                 } else{
@@ -62,26 +73,31 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
+            //sets photo object to default object if request fails
             override fun onFailure(call: Call<RoverPhotoResponse>, t: Throwable) {
-                Log.e("MainActivity", t.localizedMessage.toString())
                 updateRoverList(arrayListOf(getDefaultPhotoObject()))
             }
         })
     }
 
+    /**
+     * sets the earthDate value based on current calendar selection
+     */
     private fun setRoverDate(){
         val year = cal.get(YEAR)
         val month = cal.get(MONTH) + 1
         val day = cal.get(DAY_OF_MONTH)
         earthDate = "$year-$month-$day"
-
-        Log.d("MainActivity", "From Calendar: $roverName is set $earthDate is set")
         getRoverPhotos()
     }
 
+    /**
+     * handles setup of helper functions for date picker
+     */
     private fun setupDatePicker(){
         datePicker = findViewById(R.id.rover_date_picker)
         val dateSetListener =
+            //set date for rover lookup
             DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
                 cal.set(YEAR, year)
                 cal.set(MONTH, monthOfYear)
@@ -89,6 +105,7 @@ class MainActivity : AppCompatActivity() {
                 setRoverDate()
             }
 
+        //sets onClickListener for the date picker
         datePicker!!.setOnClickListener {
             DatePickerDialog(
                 this@MainActivity,
@@ -100,15 +117,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * creates rover name spinner handlers for selections
+     */
     private fun setupRoverSpinner(){
         val roverSpinner = findViewById<Spinner>(R.id.roverNameSpinner)
         roverSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            // handler for when an item is selected
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 roverName = parent.getItemAtPosition(pos).toString()
                 Log.d("MainActivity", "From Spinner: $roverName is set $earthDate is set")
                 getRoverPhotos()
             }
 
+            //handler if no item is selected
             override fun onNothingSelected(parent: AdapterView<*>) {
                 roverName = parent.getItemAtPosition(0).toString()
             }
@@ -117,6 +139,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * creates recyclerview on main activity
+     */
     private fun setupRecyclerView(){
         val recyclerView: RecyclerView = findViewById(R.id.rvRoverPhotos)
         roverPhotoRecyclerViewAdapter = RoverPhotoRecyclerViewAdapter(roverPhotoIdList)
@@ -125,6 +150,10 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = roverPhotoRecyclerViewAdapter
     }
 
+    /**
+     * updates recyclerview with new list of photos
+     * @param photos an ArrayList of Photos to be added
+     */
     private fun updateRoverList(photos: ArrayList<Photo>) {
         roverPhotoIdList.clear()
         photos.forEach {
@@ -133,6 +162,10 @@ class MainActivity : AppCompatActivity() {
         roverPhotoRecyclerViewAdapter.notifyDataSetChanged()
     }
 
+    /**
+     * gets a photo object with hardcoded default values
+     * @return Photo with SaffronCam info
+     */
     private fun getDefaultPhotoObject() : Photo{
         val camera = Camera(0, "SaffronCam", 0, "Saffron Nap Time Camera")
         val rover = Rover(0, "Saffron", "2021-1-6", "2018-10-8", "napping")

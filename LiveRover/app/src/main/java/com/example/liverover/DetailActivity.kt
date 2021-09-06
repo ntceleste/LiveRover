@@ -6,10 +6,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.liverover.model.Photo
-import java.io.File
 
+/**
+ * Activity handler for detail view
+ */
 class DetailActivity : AppCompatActivity()  {
 
+    /**
+     * set view elements on detail view
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -17,14 +22,14 @@ class DetailActivity : AppCompatActivity()  {
 
         val media = photoData?.img_src
 
+        //if there is an img src, try to pull it down
         if (!media.isNullOrEmpty()) {
             Glide.with(this)
                 .load(media)
                 .into(findViewById(R.id.imageview))
-        } else {
-            Log.d("DetailActivity", "loading in saffron image")
         }
 
+        // if photo data exists, set texts to the photo details
         if (photoData != null) {
             setPhotoDetailText(
                 photoData.earth_date,
@@ -35,6 +40,7 @@ class DetailActivity : AppCompatActivity()  {
                 photoData.rover.landing_date,
                 photoData.camera.full_name
             )
+            //something went wrong, use some default values for now
         } else {
             setPhotoDetailText(
                 "sorry",
@@ -49,6 +55,16 @@ class DetailActivity : AppCompatActivity()  {
         Log.d("Detail Activity", "launched")
     }
 
+    /**
+     * sets photo text elements
+     * @param earthDate the earth date the photo was taken
+     * @param solDate the sol date the photo was taken
+     * @param roverName the name of the rover taking the photo
+     * @param roverStatus the current status of the rover
+     * @param roverLaunch the launch date of the rover
+     * @param roverLand the land date of the rover
+     * @param roverCamera the full name of the camera used on the rover
+     */
     private fun setPhotoDetailText(
         earthDate: String,
         solDate: String,
