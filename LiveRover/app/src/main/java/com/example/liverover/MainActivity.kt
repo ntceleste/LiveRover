@@ -18,8 +18,6 @@ import com.example.liverover.model.RoverPhotoResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.*
 import java.util.Calendar.*
 import kotlin.collections.ArrayList
@@ -51,12 +49,8 @@ class MainActivity : AppCompatActivity() {
      * makes a request to NASA API, sets recycler view to the photo list from the response
      */
     private fun getRoverPhotos(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(this.getString(R.string.base_url))
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val service = retrofit.create(RoverService::class.java)
-        val call = service.getCuriosityPhotoFromEarthDate(roverName, earthDate, this.getString(R.string.api_key))
+        val roverService = RoverService.create(this.getString(R.string.base_url))
+        val call = roverService.getCuriosityPhotoFromEarthDate(roverName, earthDate, this.getString(R.string.api_key))
 
         call.enqueue(object : Callback<RoverPhotoResponse> {
             //if request succeeds, send photo list to recyclerview
