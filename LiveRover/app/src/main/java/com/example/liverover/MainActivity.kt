@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun getRoverPhotos(){
         val roverService = RoverService.create(this.getString(R.string.base_url))
-        val call = roverService.getCuriosityPhotoFromEarthDate(roverName, earthDate, this.getString(R.string.api_key))
+        val call = roverService.getCuriosityPhotoFromEarthDate(roverName, earthDate, BuildConfig.apiKey)
 
         call.enqueue(object : Callback<RoverPhotoResponse> {
             //if request succeeds, send photo list to recyclerview
