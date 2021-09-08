@@ -3,7 +3,6 @@ package com.example.liverover
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Button
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     private var datePicker: Button? = null
     private var roverName: String = ""
     private var earthDate: String = ""
-    var cal: Calendar = getInstance()
+    private var cal: Calendar = getInstance()
 
     /**
      * set view elements on main view
@@ -89,10 +88,10 @@ class MainActivity : AppCompatActivity() {
      * handles setup of helper functions for date picker
      */
     private fun setupDatePicker(){
-        datePicker = findViewById(R.id.rover_date_picker)
+        datePicker = findViewById(R.id.roverDatePicker)
         val dateSetListener =
             //set date for rover lookup
-            DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
                 cal.set(YEAR, year)
                 cal.set(MONTH, monthOfYear)
                 cal.set(DAY_OF_MONTH, dayOfMonth)

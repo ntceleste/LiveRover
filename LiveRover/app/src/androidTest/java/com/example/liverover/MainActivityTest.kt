@@ -15,13 +15,9 @@ import org.junit.runner.RunWith
 import android.widget.DatePicker
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.*
-
-import org.hamcrest.Matchers
-
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.idling.CountingIdlingResource
 import androidx.test.espresso.intent.Intents
 import org.hamcrest.Matchers.*
 
@@ -49,14 +45,14 @@ class MainActivityTest {
     @Test
     fun tappingSelectDateButtonLaunchesDatePicker() {
         //click button to reveal date picker
-        onView(withId(R.id.rover_date_picker)).perform(click())
+        onView(withId(R.id.roverDatePicker)).perform(click())
         //check DatePicker is displayed
-        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name))).check(matches(isDisplayed()))
+        onView(withClassName(equalTo(DatePicker::class.java.name))).check(matches(isDisplayed()))
     }
 
     @Test
     fun selectInvalidDatePopulatesDefault() {
-        setDate(R.id.rover_date_picker, 1997, 10,20)
+        setDate(R.id.roverDatePicker, 1997, 10,20)
 
         onView(withId(R.id.rvRoverPhotos)).perform(RecyclerViewActions.scrollTo<RecyclerView.ViewHolder>(
             hasDescendant(withText("123 - Saffron Nap Time Camera"))))
@@ -64,7 +60,7 @@ class MainActivityTest {
 
     @Test
     fun selectValidDatePopulatesValues() {
-        setDate(R.id.rover_date_picker, 2021, 8, 21)
+        setDate(R.id.roverDatePicker, 2021, 8, 21)
         onView(withId(R.id.rvRoverPhotos)).perform(
             RecyclerViewActions.scrollToPosition<RecyclerView.ViewHolder>(
                 1
@@ -74,19 +70,19 @@ class MainActivityTest {
 
     @Test
     fun tappingIdLaunchesDetailView() {
-        setDate(R.id.rover_date_picker, 1997, 10,20)
+        setDate(R.id.roverDatePicker, 1997, 10,20)
         //this is a bad solution... But I wasn't sure it made sense to implement an idling resource... Would love to chat more on this.
         Thread.sleep(1000)
         Intents.init()
         onView(withId(R.id.rvRoverPhotos)).perform(RecyclerViewActions.actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click()))
         intended(hasComponent(DetailActivity::class.java.name))
-        Intents.release();
+        Intents.release()
     }
 
 
     private fun setDate(datePickerLaunchViewId: Int, year: Int, monthOfYear: Int, dayOfMonth: Int) {
         onView(withId(datePickerLaunchViewId)).perform(click())
-        onView(withClassName(Matchers.equalTo(DatePicker::class.java.name.toString()))).perform(
+        onView(withClassName(equalTo(DatePicker::class.java.name.toString()))).perform(
             PickerActions.setDate(
                 year,
                 monthOfYear,
