@@ -120,7 +120,6 @@ class MainActivity : AppCompatActivity() {
             // handler for when an item is selected
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 roverName = parent.getItemAtPosition(pos).toString()
-                Log.d("MainActivity", "From Spinner: $roverName is set $earthDate is set")
                 getRoverPhotos()
             }
 
